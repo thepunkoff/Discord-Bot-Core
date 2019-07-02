@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DiscordBotCore.Discord.Entities
 {
-    class TutorialBotConfig
+    public class TutorialBotConfig
     {
         public string Token { get; set; }
         public DiscordSocketConfig SocketConfig { get; set; }
