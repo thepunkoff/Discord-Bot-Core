@@ -1,6 +1,9 @@
-﻿using DiscordBotCore.Storage;
+﻿using Discord.WebSocket;
+using DiscordBotCore.Discord;
+using DiscordBotCore.Storage;
 using DiscordBotCore.Storage.Implementations;
 using Unity;
+using Unity.Injection;
 using Unity.Lifetime;
 using Unity.Resolution;
 
@@ -23,9 +26,11 @@ namespace DiscordBotCore
         public static void RegisterTypes()
         {
             _container = new UnityContainer();
-            _container.RegisterType<IDataStorage, InMemoryStorage>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<ILogger, Logger>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<Discord.Connection>(new ContainerControlledLifetimeManager());
+            _container.RegisterSingleton<IDataStorage, JsonStorage>();
+            _container.RegisterSingleton<ILogger, Logger>();
+            _container.RegisterFactory<DiscordSocketConfig>(i => SocketConfig.GetDefault());
+            _container.RegisterSingleton<DiscordSocketClient>(new InjectionConstructor(typeof(DiscordSocketConfig)));
+            _container.RegisterSingleton<Discord.Connection>();
         }
 
         public static T Resolve<T>()
